@@ -1,6 +1,12 @@
 // from data.js
 let tableData = data;
 
+String.prototype.toProperCase = function() {
+	return this.replace(/\w\S*/g, function(txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
+};
+
 const tbody = d3.select('tbody');
 const button = d3.select('#filter-btn');
 const clearFilter = d3.select('#clear-filter');
@@ -17,6 +23,14 @@ tableData.forEach((row) => {
 	if (!shapes.includes(row.shape)) {
 		shapes.push(row.shape);
 	}
+	row.comments = row.comments.replace(/&#44/g, ',');
+	row.comments = row.comments.replace(/&#39/g, "'");
+	row.comments = row.comments.replace(/&#33/g, '!');
+
+	delete row.country;
+
+	row.state = row.state.toUpperCase();
+	row.city = row.city.toProperCase();
 });
 
 states.sort();
